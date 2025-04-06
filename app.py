@@ -1,11 +1,15 @@
 from flask import Flask
+from flask import render_template
+from flask import request
+from models import engine
+from sqlalchemy import text
 
 app = Flask(__name__)
 
 
 @app.route("/")
 def homepage():
-    return "Homepage in production"
+    return render_template("index.html")
 
 @app.route("/gigs")
 def gig_list():
@@ -27,19 +31,26 @@ def opportunities():
 def calendar():
     return "Calendar in production"
 
-@app.route("/register")
+@app.route("/register", methods=["GET", "POST"])
 def register():
-    return "Register in production"
+    if request.method == "POST":
+        return "Register in production"
+    else:
+        return "Register in production"
 
-@app.route("/login")
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    return "Login in production"
+    if request.method == "POST":
+        return "Login in production"
+    else:
+        return "Login in production"
 
 @app.route("/user/<username>")
 def user_profile(username):
     """Show the user profile for given user"""
-    return f"User {escape(username)}"
+    return "User page in production"
 
 @app.route("/about")
 def about():
+    """Render about page"""
     return "About page in production"
