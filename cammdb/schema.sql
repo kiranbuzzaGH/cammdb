@@ -19,31 +19,31 @@ DROP TABLE IF EXISTS opportunities_types;
 CREATE TABLE artists (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         description TEXT,
-        name TEXT NOT NULL,
+        name TEXT NOT NULL
 );
 CREATE TABLE instruments (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT UNIQUE NOT NULL,
+        name TEXT UNIQUE NOT NULL
 );
 CREATE TABLE users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         description TEXT,
         email TEXT,
         name TEXT UNIQUE NOT NULL,
-        password TEXT NOT NULL
+        password TEXT
 );
 CREATE TABLE venues (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         address TEXT NOT NULL,
-        name TEXT NOT NULL,
+        name TEXT NOT NULL
 );
 CREATE TABLE tags (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT UNIQUE NOT NULL,
+        name TEXT UNIQUE NOT NULL
 );
 CREATE TABLE types (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT UNIQUE NOT NULL,
+        name TEXT UNIQUE NOT NULL
 );
 CREATE TABLE gigs (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -62,7 +62,6 @@ CREATE TABLE opportunities (
         artist_id INTEGER,
         instrument_id INTEGER,
         organiser_id INTEGER NOT NULL,
-        PRIMARY KEY (id),
         FOREIGN KEY(artist_id) REFERENCES artists (id),
         FOREIGN KEY(instrument_id) REFERENCES instruments (id),
         FOREIGN KEY(organiser_id) REFERENCES users (id)
@@ -74,7 +73,7 @@ CREATE TABLE posts (
         title TEXT NOT NULL,
         body TEXT NOT NULL,
         FOREIGN KEY (author_id) REFERENCES users (id)
-)
+);
 CREATE TABLE artists_members (
         artist_id INTEGER NOT NULL,
         user_id INTEGER NOT NULL,

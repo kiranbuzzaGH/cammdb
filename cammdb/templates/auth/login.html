@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block header %}
+    <h1>{% block title %}Log In{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        <label for="name">Name</label>
+        <input name="name" id="name" required>
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" required>
+        <input type="submit" value="Log In">
+    </form>
+    <p>
+        <a class="btn btn-primary" href="{{url_for('auth.oauth2_authorize', provider='google') }}">Login with Google</a>
+        <a class="btn btn-primary" href="{{url_for('auth.oauth2_authorize', provider='facebook') }}">Login with Facebook</a>
+    </p>
+{% endblock %}

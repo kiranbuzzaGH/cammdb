@@ -1,24 +1,29 @@
 import os
 
+from dotenv import load_dotenv
 from flask import Flask
 
+from . import db
+from . import auth
+from . import news
+from . import users
+from instance.config import Config
+
+
+
+load_dotenv()
 
 def create_app(test_config=None):
     # Create and configure the app
     app = Flask(__name__, instance_relative_config=True)
 
-    # Control configuration values - https://flask.palletsprojects.com/en/stable/config/
-    # In particular, app.config["SECRET_KEY"] has been assigned
-    app.config.from_prefixed_env()
-    app.config.from_mapping(
-        DATABASE=os.path.join(app.instance_path, "cammdb.sqlite"),
-    )
+    app.config.from_mapping(DATABASE=os.path.join(app.instance_path, "cammdb.sqlite"),)
 
-    if test_config is None:
-        # Load the instance config, if it exists, when not testing
-        app.config.from_pyfile("config.py", silent=True)
-    else:
-        # Load the test config if passed in
+    # Load the default config
+    app.config.from_object(Config)
+
+    # Override with test config if provided
+    if test_config:
         app.config.from_mapping(test_config)
 
     # Ensure the instance folder exists
@@ -27,16 +32,14 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    # Test homepage
-    @app.route("/hello")
-    def hello():
-        return "Hello, World!"
 
-    from . import db
     db.init_app(app)
 
-    from . import auth
     app.register_blueprint(auth.bp)
 
-    return app
+    app.register_blueprint(news.bp)
+    app.add_url_rule("/", endpoint="index")
 
+    app.register_blueprint(users.bp)
+
+    return app
