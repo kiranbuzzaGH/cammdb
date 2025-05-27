@@ -11,5 +11,6 @@
         <label for="body">Body</label>
         <textarea name="body" id="body">{{ request.form["body"] }}</textarea>
         <input type="submit" value="Save">
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
     </form>
 {% endblock %}

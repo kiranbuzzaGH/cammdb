@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block header %}
+    <h1>{% block title %}{{ profile["name"] }}{% endblock %}</h1>
+    {% if g.user["id"] == profile["id"] %}
+        <a class="action" href="{{ url_for('users.update_profile') }}">Edit</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+       <article class="profile">
+            <div>
+                <header>Email</header>
+                <p class="email">{{ profile["email"] }}</p>
+            </div>
+            <hr>
+            <div>
+                <header>Description</header>
+                <p class="description">{{ profile["description"] }}</p>
+            </div>
+        </article>
+{% endblock %}

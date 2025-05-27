@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block header %}
+    <h1>{% block title %}Edit "{{ user['name'] }}"{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        <label for="name">Name</label>
+        <input name="name"
+                 id="name"
+              value="{{ request.form['name'] or user['name'] }}" required>
+        <label for="description">Description</label>
+        <textarea name="description"
+                    id="description">{{ request.form["description"] or user["description"] }}</textarea>
+        <label for="email">Email</label>
+        <input name="email" id="email" value="{{ request.form['email'] or user['email'] }}">
+        <input type="submit" value="Save">
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+    </form>
+{% endblock %}

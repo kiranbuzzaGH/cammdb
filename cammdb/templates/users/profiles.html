@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block header %}
+    <h1>{% block title %}Profiles{% endblock %}</h1>
+    {% if g.user %}
+        <a class="action" href="{{ url_for('users.update_profile') }}">Edit Profile</a>
+    {% else %}
+        <a class="action" href="{{ url_for('auth.login') }}">Login</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% for profile in profiles %}
+        <article class="profile">
+            <header>
+                <div>
+                    <h1><a href="{{ url_for('users.display_profile', id=profile['id']) }}">{{ profile["name"] }}</a></h1>
+                </div>
+            </header>
+<!--TODO: print the relevant tags here-->
+        </article>
+        {% if not loop.last %}
+            <hr>
+        {% endif %}
+    {% endfor %}
+{% endblock %}

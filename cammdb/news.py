@@ -41,14 +41,12 @@ def create_post():
             db.commit()
             return redirect(url_for("news.index"))
 
-        return render_template("news/create_post.html")
+    return render_template("news/create_post.html")
 
 
 def get_post(id, check_author=True):
     post = get_db().execute(
-        "SELECT posts.id, title, body, created, author_id, name"
-        "FROM posts JOIN users ON posts.author_id = users.id"
-        "WHERE posts.id = ?",
+        "SELECT posts.id, title, body, created, author_id, name FROM posts JOIN users ON posts.author_id = users.id WHERE posts.id = ?",
         (id,)
     ).fetchone()
 

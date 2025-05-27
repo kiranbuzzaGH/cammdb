@@ -11,9 +11,10 @@
         <label for="password">Password</label>
         <input type="password" name="password" id="password" required>
         <input type="submit" value="Register">
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
     </form>
     <p>
-        <a class="btn btn-primary" href="{{url_for('auth.oauth2_authorize', provider='google') }}">Login with Google</a>
-        <a class="btn btn-primary" href="{{url_for('auth.oauth2_authorize', provider='facebook') }}">Login with Facebook</a>
+        <a class="btn btn-primary" href="{{url_for('auth.oauth2_authorize', provider='google') }}">Register with Google</a>
+        <a class="btn btn-primary" href="{{url_for('auth.oauth2_authorize', provider='facebook') }}">Register with Facebook</a>
     </p>
 {% endblock %}
