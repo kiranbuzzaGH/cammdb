@@ -6,6 +6,7 @@ from flask_seasurf import SeaSurf
 from flask_talisman import Talisman
 
 from . import db
+from . import artists
 from . import auth
 from . import news
 from . import users
@@ -34,6 +35,8 @@ def create_app(test_config=None):
     app.config.from_object(Config)
 
     # Override with test config if provided
+    if test_config is None:
+        app.config.from_pyfile("config.py", silent=True)
     if test_config:
         app.config.from_mapping(test_config)
 
@@ -46,11 +49,12 @@ def create_app(test_config=None):
 
     db.init_app(app)
 
-    app.register_blueprint(auth.bp)
-
     app.register_blueprint(news.bp)
     app.add_url_rule("/", endpoint="index")
 
+    app.register_blueprint(auth.bp)
     app.register_blueprint(users.bp)
+    app.register_blueprint(artists.bp)
+
 
     return app

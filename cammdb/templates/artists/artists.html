@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block header %}
+    <h1>{% block title %}Artists{% endblock %}</h1>
+    {% if not g.user %}
+        <a class="action" href="{{ url_for('auth.login') }}">Login</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% for artist in artists %}
+        <article class="artist">
+            <header>
+                <div>
+                    <h1><a href="{{ url_for('artists.display_artist', id=artist['id']) }}">{{ artist["name"] }}</a></h1>
+                </div>
+            </header>
+<!--TODO: print the relevant tags here-->
+        </article>
+        {% if not loop.last %}
+            <hr>
+        {% endif %}
+    {% endfor %}
+{% endblock %}

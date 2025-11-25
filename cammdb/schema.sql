@@ -4,15 +4,15 @@ DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS venues;
 DROP TABLE IF EXISTS tags;
 DROP TABLE IF EXISTS types;
-DROP TABLE IF EXISTS gigs;
+DROP TABLE IF EXISTS events;
 DROP TABLE IF EXISTS opportunities;
 DROP TABLE IF EXISTS posts;
 DROP TABLE IF EXISTS artists_members;
 DROP TABLE IF EXISTS artists_tags;
 DROP TABLE IF EXISTS users_instruments;
 DROP TABLE IF EXISTS users_types;
-DROP TABLE IF EXISTS gigs_artists;
-DROP TABLE IF EXISTS gigs_tags;
+DROP TABLE IF EXISTS events_artists;
+DROP TABLE IF EXISTS events_tags;
 DROP TABLE IF EXISTS opportunities_tags;
 DROP TABLE IF EXISTS opportunities_types;
 
@@ -45,7 +45,7 @@ CREATE TABLE types (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT UNIQUE NOT NULL
 );
-CREATE TABLE gigs (
+CREATE TABLE events (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         date TEXT NOT NULL,
         description TEXT,
@@ -98,16 +98,16 @@ CREATE TABLE users_types (
         FOREIGN KEY(type_id) REFERENCES types (id),
         FOREIGN KEY(user_id) REFERENCES users (id)
 );
-CREATE TABLE gigs_artists (
+CREATE TABLE events_artists (
         artist_id INTEGER NOT NULL,
-        gig_id INTEGER NOT NULL,
+        event_id INTEGER NOT NULL,
         FOREIGN KEY(artist_id) REFERENCES artists (id),
-        FOREIGN KEY(gig_id) REFERENCES gigs (id)
+        FOREIGN KEY(event_id) REFERENCES events (id)
 );
-CREATE TABLE gigs_tags (
-        gig_id INTEGER NOT NULL,
+CREATE TABLE events_tags (
+        event_id INTEGER NOT NULL,
         tag_id INTEGER NOT NULL,
-        FOREIGN KEY(gig_id) REFERENCES gigs (id),
+        FOREIGN KEY(event_id) REFERENCES event (id),
         FOREIGN KEY(tag_id) REFERENCES tags (id)
 );
 CREATE TABLE opportunities_tags (

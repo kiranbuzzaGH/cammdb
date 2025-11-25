@@ -5,33 +5,33 @@ from flask import (
 from cammdb.auth import login_required
 from cammdb.db import get_db
 
-bp = Blueprint("users", __name__, url_prefix="/users")
+bp = Blueprint("artists", __name__, url_prefix="/artists")
 
 
 @bp.route("/")
 def profiles():
     db = get_db()
-    profiles = db.execute(
+    artists = db.execute(
         #TODO: introduce tags and join this query
-        "SELECT name, id FROM users ORDER BY name"
+        "SELECT name, id FROM artists ORDER BY name"
     ).fetchall()
-    return render_template("users/profiles.html", profiles=profiles)
+    return render_template("artists/artists.html", artists=artists)
 
 
-def get_profile(id, check_author=False):
+def get_artist(id, check_author=False):
     db = get_db()
-    profile = db.execute(
-        "SELECT name, description, email, id FROM users WHERE id = ?",
+    artist = db.execute(
+        "SELECT name, description, id FROM artists WHERE id = ?",
         (id,)
     ).fetchone()
 
-    if profile is None:
+    if artist is None:
         abort(404, f"Profile doesn't exist.")
 
-    if check_author and profile["id"] != g.user["id"]:
+    if check_author and artist["id"] != g.user["id"]:
         abort(403)
 
-    return profile
+    return artist
 
 
 @bp.route("/profile/<int:id>")
