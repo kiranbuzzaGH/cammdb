@@ -10,13 +10,13 @@ from . import artists
 from . import auth
 from . import news
 from . import users
-from instance.config import Config
+from instance.config import DevelopmentConfig, TestingConfig, ProductionConfig
 
 
 
 load_dotenv()
 
-def create_app(test_config=None):
+def create_app(config_override=None):
     # Create and configure the app
     app = Flask(__name__, instance_relative_config=True)
 
@@ -29,16 +29,26 @@ def create_app(test_config=None):
     # Docs: https://github.com/GoogleCloudPlatform/flask-talisman
     Talisman(app)
 
-    app.config.from_mapping(DATABASE=os.path.join(app.instance_path, "cammdb.sqlite"),)
 
-    # Load the default config
-    app.config.from_object(Config)
+    env = os.getenv("FLASK_ENV", "development")
+    if env == "production":
+        config_class = ProductionConfig
+    else:
+        config_class = DevelopmentConfig
 
-    # Override with test config if provided
-    if test_config is None:
-        app.config.from_pyfile("config.py", silent=True)
-    if test_config:
-        app.config.from_mapping(test_config)
+    # Load the relevant config
+    app.config.from_object(config_class)
+
+    # Allows create_app to also accept dicts to supplement the config classes (used in testing)
+    if isinstance(config_override, dict):
+        app.config.update(config_override)
+    elif config_override is not None:
+        app.config.from_object(config_override)
+
+    # Remember to connect to the correct environment database
+    app.config.from_mapping(
+        DATABASE=os.path.join(app.instance_path, config_class.DATABASE),
+    )
 
     # Ensure the instance folder exists
     try:

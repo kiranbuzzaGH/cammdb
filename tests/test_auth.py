@@ -37,7 +37,7 @@ def test_login(client, auth):
     with client:
         client.get("/")
         assert session["user_id"] == 1
-        assert g.user["name"] = = "test"
+        assert g.user["name"] == "test"
 
 
 @pytest.mark.parametrize(("name", "password", "message"), (
@@ -50,8 +50,8 @@ def test_login_validate_input(auth, name, password, message):
 
 
 def test_logout(client, auth):
-    auth.login():
+    auth.login()
 
     with client:
-        auth.logout():
+        auth.logout()
         assert "user_id" not in session

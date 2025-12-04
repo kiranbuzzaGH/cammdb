@@ -4,6 +4,7 @@ import tempfile
 import pytest
 from cammdb import create_app
 from cammdb.db import get_db, init_db
+from instance.config import TestingConfig
 
 with open(os.path.join(os.path.dirname(__file__), "data.sql"), "rb") as f:
     _data_sql = f.read().decode("utf8")
@@ -11,20 +12,21 @@ with open(os.path.join(os.path.dirname(__file__), "data.sql"), "rb") as f:
 
 @pytest.fixture
 def app():
-    db_fd, db_path = tempfile.mkstemp()
 
-    app = create_app({
-        "TESTING": True,
-        "DATABASE": db_path,
-    })
+    db_fd, db_path = tempfile.mkstemp()
+    os.close(db_fd) # Don't need file descriptor so close as early as possible
+
+    class LocalTestingConfig(TestingConfig):
+        DATABASE = str(db_path)
+
+    app = create_app(LocalTestingConfig)
 
     with app.app_context():
         init_db()
         get_db().executescript(_data_sql)
 
-    yeild app
+    yield app
 
-    os.close(db_fd)
     os.unlink(db_path)
 
 
@@ -34,13 +36,13 @@ def client(app):
 
 
 @pytest.fixture
-def runner(app)
-    return app.text_cli_runner()
+def runner(app):
+    return app.test_cli_runner()
 
 
 class AuthActions(object):
     def __init__(self,  client):
-        self.client = client
+        self._client = client
 
     def login(self, name="test", password="test"):
         return self._client.post(
