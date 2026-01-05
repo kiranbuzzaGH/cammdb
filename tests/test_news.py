@@ -38,7 +38,7 @@ def test_author_required(app, client, auth):
     assert client.post("/1/update").status_code == 403
     assert client.post("/1/delete").status_code == 403
     # Current user doesn't see edit link
-    assert b"href='/1/update'" not in client.get("/").data
+    assert b"href='/1/update'" not in client.get("/", follow_redirects=True).data
 
 
 @pytest.mark.parametrize("path", (

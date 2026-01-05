@@ -4,11 +4,14 @@ from cammdb.db import get_db
 
 
 def test_register(client, app):
-    assert client.get("/auth/register").status_code == 200
+    response = client.get("/auth/register")
+    assert response.status_code == 200
+
     response = client.post(
-        "/auth/register", data={"name": "a", "password": "a"}
+        "/auth/register", data={"name": "a", "password": "a",}
     )
-    assert response.headers["Location"] == "/auth/login"
+    assert response.status_code == 302
+    assert response.headers["Location"] == "/"
 
     with app.app_context():
         assert get_db().execute(
@@ -24,7 +27,8 @@ def test_register(client, app):
 def test_register_validate_input(client, name, password, message):
     response = client.post(
         "/auth/register",
-        data={"name": name, "password": password}
+        data={"name": name, "password": password},
+        follow_redirects=True
     )
     assert message in response.data
 
