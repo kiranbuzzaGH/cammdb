@@ -25,12 +25,6 @@ def create_app(config_override=None):
     env = os.getenv("FLASK_ENV", "development")
     if env == "production":
         config_class = ProductionConfig
-
-        # Wrap app with a Talisman to protect against security issues - currently default (most secure)
-        # settings
-        # Docs: https://github.com/GoogleCloudPlatform/flask-talisman
-        # Don't want this in the testing environment as it will introduce unaccounted for redirects
-        Talisman(app)
     else:
         config_class = DevelopmentConfig
 
@@ -52,6 +46,13 @@ def create_app(config_override=None):
     # Docs: https://flask-seasurf.readthedocs.io/en/latest/
     # Note that this must be called after the configs are loaded, else it will just use the default values
     csrf = SeaSurf(app)
+
+    # Wrap app with a Talisman to protect against security issues - currently default (most secure)
+    # settings
+    # Docs: https://github.com/wntrblm/flask-talisman 
+    # Don't want this in the testing environment as it will introduce unaccounted for redirects
+    if app.config.get("TALISMAN_ENABLED", False):
+        Talisman(app)
 
     # Ensure the instance folder exists
     try:
