@@ -49,7 +49,7 @@ def create_app(config_override=None):
 
     # Wrap app with a Talisman to protect against security issues - currently default (most secure)
     # settings
-    # Docs: https://github.com/wntrblm/flask-talisman 
+    # Docs: https://github.com/wntrblm/flask-talisman
     # Don't want this in the testing environment as it will introduce unaccounted for redirects
     if app.config.get("TALISMAN_ENABLED", False):
         Talisman(app)
@@ -69,6 +69,7 @@ def create_app(config_override=None):
     app.register_blueprint(auth.bp)
     app.register_blueprint(users.bp)
     app.register_blueprint(artists.bp)
+    app.register_blueprint(events.bp)
 
 
     return app
