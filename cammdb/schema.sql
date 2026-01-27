@@ -26,7 +26,7 @@ DROP TABLE IF EXISTS users;
 CREATE TABLE users(
         id              INTEGER PRIMARY KEY,
         bio             TEXT,
-        created_at      TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        created_at      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         display_name    TEXT CHECK (display_name IS NULL OR length(trim(display_name)) > 0),
         email           TEXT NOT NULL UNIQUE COLLATE NOCASE,
         is_admin        INTEGER NOT NULL DEFAULT 0 CHECK (is_admin IN (0,1)),
@@ -60,7 +60,7 @@ CREATE INDEX IF NOT EXISTS user_instruments_index_user_id ON user_instruments(us
 CREATE TABLE artists(
         id                      INTEGER PRIMARY KEY,
         bio                     TEXT,
-        created_at              TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        created_at              TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         owner_user_id           INTEGER NOT NULL, -- When querying, make default the creator
         name                    TEXT NOT NULL CHECK(length(trim(name)) > 0),
         FOREIGN KEY(owner_user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
@@ -94,12 +94,12 @@ CREATE TABLE venues(
 ) STRICT;
 CREATE TABLE events(
         id                      INTEGER PRIMARY KEY,
-        created_at              TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        created_at              TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         description             TEXT,
-        end_datetime            TEXT, -- Remember to compute the default endtime (eg midnight the next day) if none when querying
+        end_datetime            TIMESTAMP, -- Remember to compute the default endtime (eg midnight the next day) if none when querying
         name                    TEXT CHECK(name IS NULL OR length(trim(name)) > 0),     -- Remember to make this the top billing artist if null when querying
         organiser_user_id       INTEGER NOT NULL,
-        start_datetime          TEXT NOT NULL,
+        start_datetime          TIMESTAMP NOT NULL,
         venue_id                INTEGER,
         FOREIGN KEY(organiser_user_id) REFERENCES users(id) ON DELETE SET NULL ON UPDATE CASCADE, --when querying, if null, use "deleted user" placeholder
         FOREIGN KEY(venue_id) REFERENCES venues(id) ON DELETE SET NULL ON UPDATE CASCADE
@@ -130,9 +130,9 @@ CREATE TABLE opportunities(
         id                      INTEGER PRIMARY KEY,
         artist_id               INTEGER, -- optional
         body                    TEXT,
-        created_at              TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        created_at              TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         owner_user_id           INTEGER NOT NULL,
-        expires_at              TEXT,
+        expires_at              TIMESTAMP,
         title                   TEXT NOT NULL CHECK(length(trim(title)) > 0),
         FOREIGN KEY(artist_id) REFERENCES artists(id) ON DELETE SET NULL ON UPDATE CASCADE,
         FOREIGN KEY(owner_user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
@@ -171,7 +171,7 @@ CREATE TABLE posts (
         id                      INTEGER PRIMARY KEY,
         author_user_id          INTEGER NOT NULL,
         body                    TEXT,
-        created_at              TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        created_at              TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         title                   TEXT NOT NULL CHECK(length(trim(title)) > 0),
         FOREIGN KEY (author_user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) STRICT;

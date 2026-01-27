@@ -1,3 +1,5 @@
+"""Connects the application to the SQLite database"""
+
 import sqlite3
 from datetime import datetime
 
@@ -6,6 +8,13 @@ from flask import current_app, g
 
 
 def get_db():
+    """
+    Return the database connection, or makes and stores the connection in the
+    case that no connection has been made.
+
+    Return Value
+    g.db -- the database connection
+    """
     if "db" not in g:
         g.db = sqlite3.connect(
             current_app.config["DATABASE"],
@@ -16,7 +25,10 @@ def get_db():
     return g.db
 
 
-def close_db(e=None):
+def close_db():
+    """
+    Checks if a connection was created and, if relevant, closes it.
+    """
     db = g.pop("db", None)
 
     if db is not None:
@@ -24,6 +36,9 @@ def close_db(e=None):
 
 
 def init_db():
+    """
+    Clear the existing data and create new tables.
+    """
     db = get_db()
 
     with current_app.open_resource("schema.sql") as f:
@@ -32,7 +47,9 @@ def init_db():
 
 @click.command("init-db")
 def init_db_command():
-    """Clear the existing data and create new tables."""
+    """
+    Allows user to call the init_db function from the command line.
+    """
     init_db()
     click.echo("Initialized the database.")
 
@@ -43,5 +60,11 @@ sqlite3.register_converter(
 
 
 def init_app(app):
+    """
+    Registers the close_db and init_db_command functions with the application.
+
+    Arguments
+    app -- the application defined within the factory function
+    """
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
